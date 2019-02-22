@@ -13,6 +13,7 @@ const fs = require('fs');
 const pad = require('pad');
 const spawn = require('child_process').spawn;
 const AdmZip = require('adm-zip');
+const Push = require('pushover-notifications');
 
 const settings = require('./settings.json'); // File containing user settings
 const logstream = fs.createWriteStream(settings.logFile, {flags:'a'});
@@ -827,6 +828,7 @@ function download(url, title, thisChannel, rawPath, video) { // The main downloa
 		name = title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 		file2 = (rawPath+'TEMP_'+title+'.mp4') // Specify the temp file to write the metadata to
 		ffmpegFormat(file, name, file2, video) // Format with ffmpeg for titles/plex support
+		sendNotification(title, thisChannel) // Send notifications
 	});
 }
 
@@ -870,6 +872,7 @@ function resumeDownload(url, title, thisChannel, rawPath, video) { // This handl
 		name = title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 		file2 = (rawPath+'TEMP_'+title+'.mp4') // Specify the temp file to write the metadata to
 		ffmpegFormat(file, name, file2, video) // Format with ffmpeg for titles/plex support
+		sendNotification(title, thisChannel) // Send notifications
 	});
 }
 
@@ -920,4 +923,27 @@ function updateLibrary() { // Function for updating plex libraries
 		}
 		resolve()
 	})
+}
+
+function sendNotification(video, channel) { // Function for sending notifications
+	if (settings.notificationPushover) { // Pushover
+		fLog("Sending Pushover notification")
+		console.log('\n> Sending Pushover notification')
+
+		const pushover = new Push({
+			user: settings.notificationPushoverUser,
+			token: settings.notificationPushoverToken,
+		})
+
+		var msg = {
+			message: video,
+			title: 'New video from '+channel,
+		}
+
+		pushover.send(msg, function(err, result) {
+			if (err) {
+				throw err
+			}
+		})
+	}
 }
