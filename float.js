@@ -726,8 +726,8 @@ function getVideos() {
 
 								if (settings.extras.saveNfo) {
 									fLog(`Download-Init > Saving "${video.title}".nfo`)
-                  let doc = builder.create('episodedetails').ele('title').text(video.shortTitle).up().ele('showtitle').text(video.subChannel).up().ele('description').text(video.description).up().ele('aired').text(video.releaseDate).up().ele('season').text(video.seasonNumber).up().ele('episode').text(video.episodeNumber).up().end({pretty: true});
-                  fs.writeFile(video.rawPath + video.title + '.nfo', doc, 'utf8', function (error) {
+									let doc = builder.create('episodedetails').ele('title').text(video.shortTitle).up().ele('showtitle').text(video.subChannel).up().ele('description').text(video.description).up().ele('aired').text(video.releaseDate).up().ele('season').text(video.seasonNumber).up().ele('episode').text(video.episodeNumber).up().end({pretty: true});
+									fs.writeFile(video.rawPath + video.title + '.nfo', doc, 'utf8', function (error) {
 										fLog(`Download-Init > Error Saving "${video.title}".nfo!! ${error}`)
 									});
                 }
@@ -883,7 +883,7 @@ function downloadYoutube(video) {
 		name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 		temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
 		ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
-		sendNotification(title, thisChannel) // Send notifications
+		sendNotification(video.title, "The WAN Show") // Send notifications
 	});
 }
 
@@ -952,7 +952,7 @@ function downloadVideo(video) { // This handles resuming downloads, its very sim
 			name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 			temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
 			ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
-			sendNotification(title, thisChannel) // Send notifications
+			sendNotification(video.title, thisChannel) // Send notifications
 		}); // Rename it without .part
 	});
 }
