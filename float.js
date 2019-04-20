@@ -819,20 +819,24 @@ function doPathChecks(video) {
 function getWAN() {
 	return new Promise((resolve, reject) => {
 		if (!settings.TheWANShow) {
-      resolve();
-      return;
-    }
+			resolve();
+			return;
+		}
 		fLog(`WAN-Init > Fetching LTT youtube videos...`)
 		floatRequest.get({ // Generate the key used to download videos
-			url: "https://www.youtube.com/user/LinusTechTips/videos"
+			url: "https://www.youtube.com/user/LinusTechTips/videos?view=2&flow=grid"
 		}, function (error, resp, body) {
 			fLog(`WAN-Init > Searching videos for WAN...`)
 			var $ = cheerio.load(body);
-			$('a').filter(function() {
+			$('a').each(function() {
 				if ($(this).text().indexOf('WAN') > -1) { // If the element contains the text WAN and is not already downloaded
 					fLog(`WAN > Found "${$(this).text()}"`);
 					if (Object.keys(videos).indexOf($(this).attr("href")) == -1) {
-						var video = { subChannel: "The WAN Show", releaseDate: new Date(), title: $(this).text(), url: $(this).attr('href')};
+						var video = {
+							subChannel: "The WAN Show",
+							releaseDate: new Date($(this).text().split('WAN Show')[1]).toISOString().substring(0,10),
+							title: $(this).text().split(' - WAN Show')[0], url: $(this).attr('href')
+						};
 						episodeList[video.subChannel] += 1 // Increment the episode number for this subChannel
 						video = doTitleFormatting(doPathChecks(video));
 						if(settings.extras.downloadArtwork) { // If downloading artwork is enabled download it
@@ -844,8 +848,9 @@ function getWAN() {
 						fLog(`WAN > "${$(this).text()}" Exists, Skipping!`);
 						console.log(`${colourList["The WAN Show"]}The Wan Show \u001b[38;5;196mYT\u001b[0m> ${$(this).text()} == \u001b[32mEXISTS\u001b[0m`);
 					}
+					return false;
 				}
-			}).next();
+			});
 			resolve();
 		});
 	});
@@ -858,7 +863,7 @@ function downloadYoutube(video) {
 		width: 30,
 		total: 100
 	})
-	var displayTitle = pad(`${colourList[video.subChannel]}${video.subChannel} \u001b[38;5;196mYT\u001b[0m${video.title.replace(/.*- /,'> ').slice(0,35)}`, 36) // Set the title for being displayed and limit it to 25 characters
+	var displayTitle = pad(`${colourList[video.subChannel]}${video.subChannel} \u001b[38;5;196mYT\u001b[0m> ${video.title.slice(0,35)}`, 36) // Set the title for being displayed and limit it to 25 characters
 	var total = 0 // Define the total size as 0 becuase nothing has downlaoded yet
 	var timePassed = 0;
 	ytdl(video.url, {quality: 'highest'}).on('progress', function (length, bytesDownloaded, totalBytes) { // Send the request to download the file, run the below code every downloadUpdateTime while downloading
