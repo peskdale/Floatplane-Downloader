@@ -944,21 +944,27 @@ function downloadVideo(video) { // This handles resuming downloads, its very sim
 		bar.tick({'title': displayTitle, 'stats': `${(total/1024000).toFixed(0)}/${(total/1024000).toFixed(0)}MB`})
 		bar.terminate();
 		videos[video.guid].partial = false;
-    videos[video.guid].saved = true;
-    saveVideoData();
+		videos[video.guid].saved = true;
 		queueCount -= 1 // Reduce queueCount and liveCount by 1
 		liveCount -= 1
+		saveVideoData();
 	// Write out the file to the partial file previously saved. But write with read+ and set the starting byte number (Where to start wiriting to the file from) to the previous amount transferred
 	}).pipe(fs.createWriteStream(video.rawPath+video.title+'.mp4.part', fileOptions)).on('finish', function(){ // When done writing out the file
-		fs.rename(video.rawPath+video.title+'.mp4.part', video.rawPath+video.title+'.mp4', function(){
-			videos[video.guid].file = video.rawPath+video.title+'.mp4';
-			saveVideoData();
-			file = video.rawPath+video.title+'.mp4' // Specifies where the video is saved
-			name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
-			temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
-			ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
-			sendNotification(video.title, video.subChannel) // Send notifications
-		}); // Rename it without .part
+		if (fs.statSync(video.rawPath+video.title+'.mp4.part')["size"] < 1000000) { // If the video is saved but its size is less than 10kb its failed and remove it.
+			delete videos[video.guid];
+			fLog('Download > An error occoured for "'+video.title+'": Downloaded file too small!');
+			console.log(`An error occurred: Downloaded file too small!`);
+		} else {
+			fs.rename(video.rawPath+video.title+'.mp4.part', video.rawPath+video.title+'.mp4', function(){
+				videos[video.guid].file = video.rawPath+video.title+'.mp4';
+				saveVideoData();
+				file = video.rawPath+video.title+'.mp4' // Specifies where the video is saved
+				name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
+				temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
+				ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
+				sendNotification(video.title, video.subChannel) // Send notifications
+			}); // Rename it without .part
+		}
 	});
 }
 
