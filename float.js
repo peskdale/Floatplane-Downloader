@@ -15,7 +15,7 @@ const spawn = require('child_process').spawn;
 const builder = require('xmlbuilder');
 const Push = require('pushover-notifications');
 
-const settings = require('./settings.json'); // File containing user settings
+const settings = require(__dirname + '/settings.json'); // File containing user settings
 const logstream = fs.createWriteStream(settings.logFile, {flags:'a'});
 
 process.on('uncaughtException', function(err) { // "Nice" Error handling, will obscure unknown errors, remove or comment for full debugging
@@ -47,7 +47,7 @@ process.on('uncaughtException', function(err) { // "Nice" Error handling, will o
 		logstream.write(`${Date()} == ERROR > videos.json > Corrupt videos.json file! Attempting to recover...`)
 		console.log('\u001b[41mERROR> Corrupt videos.json file! Attempting to recover...\u001b[0m');
 		try {
-			videos = require('./videos.json.backup')
+			videos = require(__dirname + '/videos.json.backup')
 			saveVideoData();
 			logstream.write(`${Date()} == ERROR > videos.json > Recovered from backup! Restarting script...`)
 			console.log('\u001b[42mRecovered from backup! Restarting script...\u001b[0m');
@@ -85,9 +85,9 @@ function restartScript() {
 }
 
 // Check if videos file exists.
-if (!fs.existsSync('./videos.json')) {
+if (!fs.existsSync(__dirname + '/videos.json')) {
 	// Create file
-	fs.appendFile('./videos.json', '{}', function (err) {
+	fs.appendFile(__dirname + '/videos.json', '{}', function (err) {
 		// Tell the user the script is restarting (with colors)
 		fLog(`Pre-Init > videos.json does not exist! Created partial.json and restarting script...`)
 		console.log('\u001b[33mCreated videos.json. Restarting script...\u001b[0m');
@@ -98,9 +98,9 @@ if (!fs.existsSync('./videos.json')) {
 // Put partial detection in a timeout to avoid it quitting before the videos check
 setTimeout(function() {
 	// Check if partial file exists.
-	if (!fs.existsSync('./partial.json')) {
+	if (!fs.existsSync(__dirname + '/partial.json')) {
 		// Create file
-		fs.appendFile('./partial.json', '{}', function (err) {
+		fs.appendFile(__dirname + '/partial.json', '{}', function (err) {
 			// Tell the user the script is restarting (with colors)
 			fLog(`Pre-Init > partial.json does not exist! Created partial.json and restarting script...`)
 			console.log('\u001b[33mCreated partial.json. Restarting script...\u001b[0m');
@@ -111,7 +111,7 @@ setTimeout(function() {
 }, 100);
 
 
-const videos = require('./videos.json'); // Persistant storage of videos downloaded
+const videos = require(__dirname + '/videos.json'); // Persistant storage of videos downloaded
 
 if (!fs.existsSync(settings.videoFolder)){ // Check if the new path exists (plus season folder if enabled)
 	fs.mkdirSync(settings.videoFolder); // If not create the folder needed
