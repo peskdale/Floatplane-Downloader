@@ -151,6 +151,11 @@ const subChannelIdentifiers = {
 			title: 'TechQuickie',
 			check: 'tq:',
 			type: 'title',
+		},
+		{
+			title: 'Carpool Critics',
+			check: 'carpool',
+			type: 'title',
 		}
 	]
 }
