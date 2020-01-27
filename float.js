@@ -154,7 +154,7 @@ const subChannelIdentifiers = {
 		},
 		{
 			title: 'Carpool Critics',
-			check: 'carpool',
+			check: 'cc:',
 			type: 'title',
 		}
 	]
