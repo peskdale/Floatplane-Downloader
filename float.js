@@ -153,8 +153,18 @@ const subChannelIdentifiers = {
 			type: 'title',
 		},
 		{
+                        title: 'ShortCircuit',
+                        check: 'sc:',
+                        type: 'title',
+                },
+		{
 			title: 'Carpool Critics',
 			check: 'cc:',
+			type: 'title',
+		},
+		{
+			title: 'Livestreams',
+			check: 'livestream',
 			type: 'title',
 		}
 	]
