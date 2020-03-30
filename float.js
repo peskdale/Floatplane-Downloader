@@ -32,7 +32,7 @@ process.on('uncaughtException', function(err) { // "Nice" Error handling, will o
 	} if(isJSONErr && err.toString().indexOf('partial.json') > -1) { // If this error and the error is related to this file
 		logstream.write(`${Date()} == ERROR > partial.json > Corrupt partial.json file! Attempting to recover...`)
 		console.log('\u001b[41mERROR> Corrupt partial.json file! Attempting to recover...\u001b[0m');
-		fs.writeFile("./partial.json", '{}', 'utf8', function (error) { // Just write over the corrupted file with {}
+		fs.writeFile(__dirname + '/partial.json', '{}', 'utf8', function (error) { // Just write over the corrupted file with {}
 			if (error) {
 				logstream.write(`${Date()} == "+'ERROR > partial.json > Recovery failed! Error: ${error}\n`);
 				console.log(`\u001b[41mRecovery failed! Error: ${error}\u001b[0m`)
@@ -53,7 +53,7 @@ process.on('uncaughtException', function(err) { // "Nice" Error handling, will o
 			console.log('\u001b[42mRecovered from backup! Restarting script...\u001b[0m');
 			restartScript();
 		} catch (error) {
-			fs.writeFile("./videos.json", '{}', 'utf8', function (error) { // Just write over the corrupted file with {}
+			fs.writeFile(__dirname + '/videos.json', '{}', 'utf8', function (error) { // Just write over the corrupted file with {}
 				if (error) {
 					logstream.write(`${Date()} == ERROR > videos.json > Recovery failed! Error: ${error}`)
 					console.log(`\u001b[41mRecovery failed! Error: ${error}\u001b[0m`)
@@ -478,13 +478,13 @@ function saveSettings() { // Saves all the settings from the current settings ob
 }
 
 function saveVideoData() { // Function for saving partial data, just writes out the variable to disk
-	fs.writeFile("./videos.json", JSON.stringify(videos, null, 2), 'utf8', function (err) {
+	fs.writeFile(__dirname + '/videos.json', JSON.stringify(videos, null, 2), 'utf8', function (err) {
 		if (err) console.log(err)
 	});
 }
 
 function backupVideoData() { // Function for saving partial data, just writes out the variable to disk
-	fs.writeFile("./videos.json.backup", JSON.stringify(videos, null, 2), 'utf8', function (err) {
+	fs.writeFile(__dirname + '/videos.json.backup', JSON.stringify(videos, null, 2), 'utf8', function (err) {
 		if (err) console.log(err)
 	});
 }
