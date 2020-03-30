@@ -470,7 +470,7 @@ function constructCookie() { // Generate a array of cookies from the json object
 function saveSettings() { // Saves all the settings from the current settings object back to the settings.json file
 	return new Promise((resolve, reject) => {
 		console.log('> Saving settings');
-		fs.writeFile("./settings.json", JSON.stringify(settings, null, 2), 'utf8', function (err) {
+		fs.writeFile(__dirname + '/settings.json', JSON.stringify(settings, null, 2), 'utf8', function (err) {
 			if (err) reject(err)
 			resolve()
 		});
