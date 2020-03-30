@@ -411,6 +411,7 @@ function doLogin() { // Login using the users credentials and save the cookies &
 			}
 		}, function (error, resp, body) {
 			if (body.needs2FA) { // If the server returns needs2FA then we need to prompt and enter a 2Factor code
+				sendNotification('Floatplane Login Error','New 2FA code required!')
 				doTwoFactorLogin().then(resolve)
 			} else if (body.user) { // If the server returns a user then we have logged in
 				fLog(`Init-Login > Logged In as ${settings.user}!`)
