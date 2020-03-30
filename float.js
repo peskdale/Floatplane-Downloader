@@ -903,7 +903,6 @@ function downloadYoutube(video) {
 		name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 		temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
 		ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
-		sendNotification(video.title, "The WAN Show") // Send notifications
 	});
 }
 
@@ -977,7 +976,7 @@ function downloadVideo(video) { // This handles resuming downloads, its very sim
 				name = video.title.replace(/^.*[0-9].- /, '').replace('- ', '') // Generate the name used for the title in metadata (This is for plex so "episodes" have actual names over Episode1...)
 				temp_file = video.rawPath+'TEMP_'+video.title+'.mp4' // Specify the temp file to write the metadata to
 				ffmpegFormat(file, name, temp_file, video) // Format with ffmpeg for titles/plex support
-				sendNotification(video.title, video.subChannel) // Send notifications
+				sendNotification('New video from '+video.subChannel, video.title) // Send notifications
 			}); // Rename it without .part
 		}
 	});
@@ -1033,7 +1032,7 @@ function updateLibrary() { // Function for updating plex libraries
 	})
 }
 
-function sendNotification(video, channel) { // Function for sending notifications
+function sendNotification(title, message) { // Function for sending notifications
 	if (settings.notificationPushover) { // Pushover
 		fLog("Sending Pushover notification")
 		console.log('\n> Sending Pushover notification')
@@ -1044,8 +1043,8 @@ function sendNotification(video, channel) { // Function for sending notification
 		})
 
 		var msg = {
-			message: video,
-			title: 'New video from '+channel,
+			message: message,
+			title: title,
 		}
 
 		pushover.send(msg, function(err, result) {
