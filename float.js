@@ -16,7 +16,7 @@ const builder = require('xmlbuilder');
 const Push = require('pushover-notifications');
 
 const settings = require(__dirname + '/settings.json'); // File containing user settings
-const logstream = fs.createWriteStream(settings.logFile, {flags:'a'});
+const logstream = fs.createWriteStream(__dirname + '/' + settings.logFile, {flags:'a'});
 
 process.on('uncaughtException', function(err) { // "Nice" Error handling, will obscure unknown errors, remove or comment for full debugging
 	let isJSONErr = (err.toString().indexOf('Unexpected string in JSON') > -1 || err.toString().indexOf('Unexpected end of JSON input') > -1 || err.toString().indexOf('Unexpected token') > -1)

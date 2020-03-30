@@ -29,7 +29,7 @@
   "notificationPushoverUser": "",
   "notificationPushoverToken": "",
   "logging": false,
-  "logFile": "./float.log",
+  "logFile": "float.log",
   "plexSection": "0",
   "remotePlexUpdates": {
     "enabled": false,
