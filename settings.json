@@ -7,6 +7,7 @@
   "extras": {
     "downloadArtwork": true,
     "artworkFormat": "png",
+    "artworkSuffix": "-thumb",
     "saveNfo": false
   },
   "fileFormatting": {

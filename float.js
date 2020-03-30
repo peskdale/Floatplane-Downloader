@@ -721,7 +721,7 @@ function getVideos() {
 
 								if(settings.extras.downloadArtwork && video.thumbnail) { // If downloading artwork is enabled download it
 									fLog(`Download-Init > Downloading "${video.title}" artwork`)
-									floatRequest(video.thumbnail.path).pipe(fs.createWriteStream(video.rawPath+video.title+'.'+settings.extras.artworkFormat))
+									floatRequest(video.thumbnail.path).pipe(fs.createWriteStream(video.rawPath+video.title+settings.extras.artworkSuffix+'.'+settings.extras.artworkFormat))
 								} // Save the thumbnail with the same name as the video so plex will use it
 
 								queueCount += 1 // Increase the queue count by 1
