@@ -782,7 +782,7 @@ function doTitleFormatting(video) {
 	if (settings.fileFormatting.formatWithDate == true) { video.title = `${video.releaseDate} - ${video.title}` } // Add the upload date to the filename
 	if (settings.fileFormatting.formatWithSubChannel == true) { video.title = `${video.subChannel} - ${video.title}` } // Add subChannel naming if requested
 
-	video.title = sanitize(video.title);
+	video.title = sanitize(video.title.replace(':',' -'));
 
 	return video;
 }
