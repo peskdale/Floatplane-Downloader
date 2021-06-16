@@ -48,7 +48,7 @@ export default class Video {
 			'%hour%': nPad(this.releaseDate.getHours()),
 			'%minute%': nPad(this.releaseDate.getMinutes()),
 			'%second%': nPad(this.releaseDate.getSeconds()),
-			'%videoTitle%': this.title.replace(/ - /g, ' ').replace(/\//g, ' ').replace(/\\/g, ' '),
+			'%videoTitle%': this.title.replace(/:/g, '꞉').replace(/\//g, ' ').replace(/\\/g, ' '),
 		};
 
 		let fullPath = settings.filePathFormatting;
